@@ -1,16 +1,21 @@
 import './index.scss'
-import { Card, Form, Input, Button } from 'antd'
+import { Card, Form, Input, Button, message } from 'antd'
 import logo from '@/assets/logo.png'
 
-
 const Login = () => {
-
+  const onFinish = async (values) => {
+    console.log(values)
+    
+    // 2. 提示一下用户
+    message.success('登录成功')
+  }
   return (
+
     <div className="login">
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-        <Form validateTrigger="onBlur">
+        <Form onFinish={onFinish} validateTrigger="onBlur">
         <Form.Item
             name="mobile"
             // 多条校验逻辑 先校验第一条 第一条通过之后再校验第二条
