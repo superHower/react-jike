@@ -4,12 +4,13 @@ import logo from '@/assets/logo.png'
 
 
 const Login = () => {
+
   return (
     <div className="login">
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-        <Form>
+        <Form validateTrigger="onBlur">
         <Form.Item
             name="mobile"
             // 多条校验逻辑 先校验第一条 第一条通过之后再校验第二条
