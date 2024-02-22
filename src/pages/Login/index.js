@@ -3,13 +3,16 @@ import { Card, Form, Input, Button, message } from 'antd'
 import logo from '@/assets/logo.png'
 import { useDispatch } from 'react-redux'
 import { fetchLogin } from '@/store/modules/user'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const onFinish = async (values) => {
     console.log(values)
     
-    dispatch(fetchLogin(values))// 触发登录异步方法
+    await dispatch(fetchLogin(values))// 触发登录异步方法
+    navigate('/')// 跳转到首页
 
     message.success('登录成功')
   }
