@@ -5,11 +5,28 @@ import Login from '@/pages/Login'
 
 import { createBrowserRouter } from 'react-router-dom'
 import { AuthRoute } from '@/components/AuthRoute'
+import Home from '@/pages/Home'
+import Article from '@/pages/Article'
+import Publish from '@/pages/Publish'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AuthRoute><Layout /></AuthRoute> // 通过AuthRoute包裹Layout组件，实现登录验证
+    element: <AuthRoute><Layout /></AuthRoute>, // 通过AuthRoute包裹Layout组件，实现登录验证
+    children: [
+      {
+        index: true,
+        element: <Home />
+      },
+      {
+        path: 'article',
+        element: <Article />
+      },
+      {
+        path: 'publish',
+        element: <Publish />
+      }
+    ]
   },
   {
     path: "/login",
