@@ -1,12 +1,16 @@
 import './index.scss'
 import { Card, Form, Input, Button, message } from 'antd'
 import logo from '@/assets/logo.png'
+import { useDispatch } from 'react-redux'
+import { fetchLogin } from '@/store/modules/user'
 
 const Login = () => {
+  const dispatch = useDispatch()
   const onFinish = async (values) => {
     console.log(values)
     
-    // 2. 提示一下用户
+    dispatch(fetchLogin(values))// 触发登录异步方法
+
     message.success('登录成功')
   }
   return (
