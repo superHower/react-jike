@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons'
 import './index.scss'
 import { Outlet } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const { Header, Sider } = Layout
 
@@ -30,6 +31,13 @@ const items = [
 
 const GeekLayout = () => {
 
+  const navigate = useNavigate()
+  const onMenuClick = (route) => {
+    console.log('菜单被点击了', route)
+    const path = route.key
+    navigate(path)
+  }
+
   return (
     <Layout>
       <Header className="header">
@@ -49,6 +57,7 @@ const GeekLayout = () => {
             mode="inline"
             theme="dark"
             defaultSelectedKeys={['1']}//默认选中
+            onClick={onMenuClick}
             items={items}
             style={{ height: '100%', borderRight: 0 }}></Menu>
         </Sider>
