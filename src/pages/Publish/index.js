@@ -16,11 +16,12 @@ import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
-import { getChannelAPI } from '@/apis/article'
+import { createArticleAPI, getChannelAPI } from '@/apis/article'
 
 const { Option } = Select
 
 const Publish = () => {
+  // 1. 获取频道列表
   const [channelList, setChannelList] = useState([])
 
   useEffect(() => {
@@ -30,6 +31,24 @@ const Publish = () => {
     }
     getChannelList()
   }, [])
+
+  // 2. 表单提交
+  const onFinish = (formValue) => {
+    console.log('表单信息：', formValue);
+    const { title, content, channel_id } = formValue
+    // 1. 按照接口文档的格式 处理收集到的表单数据
+    const reqData = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: []
+      },
+      channel_id
+    }
+    // 2. 调用接口函数，提交表单数据
+    createArticleAPI(reqData)
+ }
 
   return (
     <div className="publish">
@@ -43,10 +62,10 @@ const Publish = () => {
         }
       >
         <Form
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 16 }}
-          initialValues={{ type: 0 }}
-
+          labelCol={{ span: 4 }} // 标签宽度
+          wrapperCol={{ span: 16 }} // 表单项宽度
+          initialValues={{ type: 0 }} // 表单默认值
+          onFinish={onFinish} // 表单提交事件
         >
           <Form.Item
             label="标题"
