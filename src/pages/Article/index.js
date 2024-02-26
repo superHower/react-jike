@@ -7,7 +7,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
 import { useEffect, useState } from 'react'
-import { getArticleListAPI } from '@/apis/article'
+import { delArticleAPI, getArticleListAPI } from '@/apis/article'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -60,7 +60,20 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button type="primary" danger shape="circle"icon={<DeleteOutlined />}/>
+            <Popconfirm
+              title="删除文章"
+              description="确认要删除当前文章吗?"
+              onConfirm={() => onConfirm(data)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       }
@@ -103,15 +116,24 @@ const Article = () => {
     })
   }
 
-    // 3. 分页
-    const onPageChange = (page) => {
-      console.log(page)
+  // 3. 分页
+  const onPageChange = (page) => {
+    console.log(page)
      
-      setReqData({ // 修改参数依赖项 引发数据的重新获取列表渲染
-        ...reqData, // 保留其他参数
-        page // 修改page参数
-      })
-    }
+    setReqData({ // 修改参数依赖项 引发数据的重新获取列表渲染
+      ...reqData, // 保留其他参数
+      page // 修改page参数
+    })
+  }
+
+  // 4. 删除
+  const onConfirm = async (data) => {
+    console.log('删除点击了', data)
+    await delArticleAPI(data.id)
+    setReqData({
+      ...reqData
+    })
+  }
 
   return (
     <div>
