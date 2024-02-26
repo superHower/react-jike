@@ -11,13 +11,13 @@ import {
   message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import './index.scss'
 
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { useState } from 'react'
-import { createArticleAPI } from '@/apis/article'
+import { useEffect, useState } from 'react'
+import { createArticleAPI, getArticleById } from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
@@ -44,20 +44,36 @@ const Publish = () => {
     }
     // 2. 调用接口函数，提交表单数据
     createArticleAPI(reqData)
+    message.success('文章发布成功')
  }
 
- // 3. 上传图片
- const [imageList, setImageList] = useState([])
- const onChange = (value) => {
-   console.log('正在上传中', value)
-   setImageList(value.fileList)
- }
+  // 3. 上传图片
+  const [imageList, setImageList] = useState([])
+  const onChange = (value) => {
+    console.log('正在上传中', value)
+    setImageList(value.fileList)
+  }
+
   // 4. 切换图片封面类型
   const [imageType, setImageType] = useState(0)
   const onTypeChange = (e) => {
     console.log('切换封面了', e.target.value)
     setImageType(e.target.value)
   }
+
+  // 5. 数据回显
+  const [searchParams] = useSearchParams() // 获取url参数
+  const articleId = searchParams.get('id') // 获取文章id
+  const [form] = Form.useForm() // 获取表单实例
+  useEffect(() => {
+    async function getArticleDetail () {
+      const res = await getArticleById(articleId) // 根据文章id获取文章详情
+      form.setFieldsValue(res.data) // 回显表单数据
+    }
+    getArticleDetail()
+  }, [articleId, form]) // form和id 依赖变化时重新执行
+
+
   return (
     <div className="publish">
       <Card
@@ -74,6 +90,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }} // 表单项宽度
           initialValues={{ type: 0 }} // 表单默认值
           onFinish={onFinish} // 表单提交事件
+          form={form} // 绑定表单实例
         >
           <Form.Item
             label="标题"
