@@ -66,28 +66,15 @@ const Article = () => {
       }
     }
   ]
-  const data = [
-    {
-      id: 1,
-      cover: { images: [''] },
-      title: '文章标题1',
-      status: '待审核',
-      pubdate: '2021-08-01',
-      read_count: 100,
-      comment_count: 10,
-      like_count: 20
-    },
-    {
-      id: 2,
-      cover: { images: [''] },
-      title: '文章标题2',
-      status: '审核通过',
-      pubdate: '2021-08-02',
-      read_count: 200,
-      comment_count: 20,
-      like_count: 40
-    }
-  ]
+  // 3. 定义 数据请求参数
+  const [reqData, setReqData] = useState({
+    status: '',
+    channel_id: '',
+    begin_pubdate: '',
+    end_pubdate: '',
+    page: 1,
+    per_page: 4
+  })
   // 1. 获取频道列表
   const { channelList } = useChannel()
   // 2. 获取文章列表
@@ -96,12 +83,25 @@ const Article = () => {
   const [count, setCount] = useState(0)
   useEffect(() => {
     async function getList () {
-      const res = await getArticleListAPI()
+      const res = await getArticleListAPI(reqData)
       setList(res.data.results)
       setCount(res.data.total_count)
     }
     getList()
-  }, [])
+  }, [reqData]) // 依赖reqData, 当reqData变化时, 重新请求数据
+
+  // 2. 获取筛选数据
+  const onFinish = (formValue) => {
+    console.log(formValue)
+
+    setReqData({ // 把表单收集到数据, 放到参数中
+      ...reqData,
+      channel_id: formValue.channel_id,
+      status: formValue.status,
+      begin_pubdate: formValue.date[0].format('YYYY-MM-DD'),
+      end_pubdate: formValue.date[1].format('YYYY-MM-DD')
+    })
+  }
 
   return (
     <div>
@@ -114,7 +114,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: null }}>
+        <Form initialValues={{ status: '' }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
