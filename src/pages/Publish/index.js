@@ -50,6 +50,13 @@ const Publish = () => {
     createArticleAPI(reqData)
  }
 
+ // 3. 上传图片
+ const [imageList, setImageList] = useState([])
+ const onChange = (value) => {
+   console.log('正在上传中', value)
+   setImageList(value.fileList)
+ }
+
   return (
     <div className="publish">
       <Card
@@ -82,6 +89,26 @@ const Publish = () => {
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
               {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
+          </Form.Item>
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            {<Upload
+              listType="picture-card"// 控制上传图片框的外观样式
+              showUploadList// 控制显示上传列表
+              action={'http://geek.itheima.net/v1_0/upload'}// 上传图片的接口地址
+              name='image'// 上传文件的参数名
+              onChange={onChange}// 上传状态改变时的回调
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>}
           </Form.Item>
           <Form.Item
             label="内容"
