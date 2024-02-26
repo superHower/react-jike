@@ -8,6 +8,7 @@ import {
   Upload,
   Space,
   Select,
+  message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -35,16 +36,18 @@ const Publish = () => {
   // 2. 表单提交
   const onFinish = (formValue) => {
     console.log('表单信息：', formValue);
+    if (imageList.length !== imageType)
+      return message.warning('封面类型和图片数量不匹配')
     const { title, content, channel_id } = formValue
     // 1. 按照接口文档的格式 处理收集到的表单数据
     const reqData = {
-      title,
-      content,
+      title, // 文章标题
+      content, // 富文本编辑器的内容
       cover: {
-        type: 0,
-        images: []
+        type: imageType, // 封面模式类型
+        images: imageList.map(item => item.response.data.url) // 封面图片url列表
       },
-      channel_id
+      channel_id // 频道id
     }
     // 2. 调用接口函数，提交表单数据
     createArticleAPI(reqData)
@@ -104,11 +107,12 @@ const Publish = () => {
               </Radio.Group>
             </Form.Item>
             {imageType > 0 && <Upload
-              listType="picture-card"
-              showUploadList
-              action={'http://geek.itheima.net/v1_0/upload'}
-              name='image'
+              listType="picture-card" // 上传框的外观类型
+              showUploadList // 是否显示上传列表
+              action={'http://geek.itheima.net/v1_0/upload'} // 上传图片的地址
+              name='image' // 上传图片的文件名
               onChange={onChange}
+              maxCount={imageType} // 最大上传数量
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
