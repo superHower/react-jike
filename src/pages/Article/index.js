@@ -13,6 +13,12 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  // 1. 定义状态枚举
+  const status = {
+    1: <Tag color='warning'>待审核</Tag>,
+    2: <Tag color='success'>审核通过</Tag>,
+  }
+  // 2. 定义表格列
   const columns = [
     {
       title: '封面',
@@ -30,6 +36,7 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
+      render: data => status[data] // 根据状态枚举, 渲染对应的标签
     },
     {
       title: '发布时间',
