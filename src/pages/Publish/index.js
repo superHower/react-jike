@@ -56,7 +56,12 @@ const Publish = () => {
    console.log('正在上传中', value)
    setImageList(value.fileList)
  }
-
+  // 4. 切换图片封面类型
+  const [imageType, setImageType] = useState(0)
+  const onTypeChange = (e) => {
+    console.log('切换封面了', e.target.value)
+    setImageType(e.target.value)
+  }
   return (
     <div className="publish">
       <Card
@@ -92,18 +97,18 @@ const Publish = () => {
           </Form.Item>
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+            <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            {<Upload
-              listType="picture-card"// 控制上传图片框的外观样式
-              showUploadList// 控制显示上传列表
-              action={'http://geek.itheima.net/v1_0/upload'}// 上传图片的接口地址
-              name='image'// 上传文件的参数名
-              onChange={onChange}// 上传状态改变时的回调
+            {imageType > 0 && <Upload
+              listType="picture-card"
+              showUploadList
+              action={'http://geek.itheima.net/v1_0/upload'}
+              name='image'
+              onChange={onChange}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
