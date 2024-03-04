@@ -17,7 +17,7 @@ import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
-import { createArticleAPI, getArticleById } from '@/apis/article'
+import { createArticleAPI, getArticleById, updateArticleAPI} from '@/apis/article'
 import { useChannel } from '@/hooks/useChannel'
 
 const { Option } = Select
@@ -38,12 +38,22 @@ const Publish = () => {
       content, // 富文本编辑器的内容
       cover: {
         type: imageType, // 封面模式类型
-        images: imageList.map(item => item.response.data.url) // 封面图片url列表
+        images: imageList.map(item => {
+          if (item.response)
+           return item.response.data.url
+          else
+           return item.url
+          
+        }) // 图片列表
       },
       channel_id // 频道id
     }
-    // 2. 调用接口函数，提交表单数据
-    createArticleAPI(reqData)
+   
+    if (articleId) {
+      updateArticleAPI({ ...reqData, id: articleId })  // 1. 更新表单数据
+    } else {
+      createArticleAPI(reqData) // 2. 提交表单数据
+    }
     message.success('文章发布成功')
  }
 
