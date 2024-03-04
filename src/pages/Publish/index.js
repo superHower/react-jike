@@ -68,7 +68,18 @@ const Publish = () => {
   useEffect(() => {
     async function getArticleDetail () {
       const res = await getArticleById(articleId) // 根据文章id获取文章详情
-      form.setFieldsValue(res.data) // 回显表单数据
+      const data = res.data
+      const { cover } = data
+      form.setFieldsValue({
+        ...data,
+        type: cover.type
+      })
+      // 回填图片列表
+      setImageType(cover.type)
+      // 显示图片({url:url})
+      setImageList(cover.images.map(url => {
+        return { url }
+      }))
     }
     getArticleDetail()
   }, [articleId, form]) // form和id 依赖变化时重新执行
@@ -123,6 +134,7 @@ const Publish = () => {
               name='image' // 上传图片的文件名
               onChange={onChange}
               maxCount={imageType} // 最大上传数量
+              fileList={imageList} // 图片列表
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
