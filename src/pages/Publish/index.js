@@ -81,7 +81,10 @@ const Publish = () => {
         return { url }
       }))
     }
-    getArticleDetail()
+    
+    if (articleId) { // 只有有id的时， 才需要回显
+      getArticleDetail()
+    }
   }, [articleId, form]) // form和id 依赖变化时重新执行
 
 
@@ -91,7 +94,7 @@ const Publish = () => {
         title={
           <Breadcrumb items={[
             { title: <Link to={'/'}>首页</Link> },
-            { title: '发布文章' },
+            { title: `${articleId ? '编辑' : '发布'}文章` },
           ]}
           />
         }
